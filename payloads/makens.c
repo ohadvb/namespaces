@@ -30,7 +30,7 @@ int main(int argc, char * argv[])
 	int fd,rc;
     g_log = fopen("/tmp/log", "a");
     report("makens");
-    int ret = unshare(CLONE_NEWUSER|CLONE_NEWPID|CLONE_NEWNS);
+    int ret = unshare(CLONE_NEWUSER|CLONE_NEWPID|CLONE_NEWNS|CLONE_NEWUTS|CLONE_NEWIPC|CLONE_NEWCGROUP);
 
     int setgroups = open("proc/self/setgroups", 1);
     if (setgroups < 0)

