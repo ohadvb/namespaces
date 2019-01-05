@@ -9,24 +9,23 @@
 #include <signal.h>
 #include <fcntl.h>
 
-FILE * pids = NULL;
 FILE * g_log = NULL;
 
 void report(char * arg)
 {
-    if (pids == NULL)
+    if (g_log == NULL)
     {
-        pids = fopen("pids", "a");
+        g_log = fopen("log", "a");
     }
     pid_t mypid = getpid();
     pid_t myppid = getppid();
-    fprintf(pids, "proc: %s. pid: %d, ppid: %d\n", arg, mypid, myppid);
+    fprintf(g_log, " %s[%d] PIDS: ppid: %d\n", arg, mypid, myppid);
 
     uid_t ruid, euid, suid;
     getresuid(&ruid, &euid, &suid); 
-    fprintf(pids, "proc: %s. ruid: %d, euid: %d, suid: %d\n", arg, ruid, euid, suid);
+    fprintf(g_log, "%s[%d] UIDS: ruid: %d, euid: %d, suid: %d\n", arg, mypid, ruid, euid, suid);
 
-    fflush(pids);
+    fflush(g_log);
 }
 
 void write_error(char * src, char * msg)

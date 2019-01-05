@@ -136,8 +136,15 @@ int main()
         my_err("fchdir");
     }
 
+    my_log("renaming", 0);
+    ret = rename("tmp/chroots/0", "tmp/chroots/old_0");
+    if (ret != 0)
+    {
+        my_err("rename");
+    }
+
     my_log("link", 0);
-    ret = symlink("/", "tmp/chroots/2");
+    ret = symlink("/", "tmp/chroots/0");
     if (ret != 0)
     {
         my_err("link");
