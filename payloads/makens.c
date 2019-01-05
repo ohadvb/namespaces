@@ -33,6 +33,29 @@ int main(int argc, char * argv[])
     int ret = unshare(CLONE_NEWUSER|CLONE_NEWPID|CLONE_NEWNS);
     report("makens");
 
+    int setgroups = open("proc/self/setgroups", 1);
+    if (setgroups < 0)
+    {
+        my_err("open setgroups");
+    }
+    char * deny = "deny";
+    ret = write(setgroups, deny, strlen(deny));
+
+    int uid_map = open("proc/self/uid_map", 1);
+    if (uid_map < 0)
+    {
+        my_err("open uid_map");
+    }
+    char * mapping = "0 1 1";
+    ret = write(uid_map, mapping, strlen(mapping));
+
+    int gid_map = open("proc/self/gid_map", 1);
+    if (gid_map < 0)
+    {
+        my_err("open gid_map");
+    }
+    ret = write(gid_map, mapping, strlen(mapping));
+
 	if ( (fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
 		my_err("socket error");
 		exit(-1);
