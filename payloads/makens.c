@@ -31,7 +31,6 @@ int main(int argc, char * argv[])
     g_log = fopen("/tmp/log", "a");
     report("makens");
     int ret = unshare(CLONE_NEWUSER|CLONE_NEWPID|CLONE_NEWNS);
-    report("makens");
 
     int setgroups = open("proc/self/setgroups", 1);
     if (setgroups < 0)
@@ -56,7 +55,13 @@ int main(int argc, char * argv[])
     }
     ret = write(gid_map, mapping, strlen(mapping));
 
-	if ( (fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
+    if (fork())
+    {
+        return 0;
+    }
+    report("makens");
+
+    if ( (fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
 		my_err("socket error");
 		exit(-1);
 	}
