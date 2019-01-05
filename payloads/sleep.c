@@ -11,24 +11,6 @@
 #include <fcntl.h>
 #include "report.h"
 
-static char child_stack[4096];
-
-
-int child_func(void * arg)
-{
-    report("child");
-    sleep(3000);
-}
-
-void check(int r, char * err)
-{
-    if (!r)
-    {
-        FILE * ef = fopen("error", "a");
-        fprintf(ef, "%s errno: %d\n", err, errno);
-        fclose(ef);
-    }
-}
 
 int main(int argc, char * argv[])
 {

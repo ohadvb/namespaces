@@ -81,6 +81,7 @@ PAYLOADS = [
             "server",
             "client",
             "makens",
+            "sniper",
            ]
 
 def main():
@@ -90,11 +91,10 @@ def main():
     # send_elf(r, "namespaces")
     # send_elf(r, "busybox")
     # run_elf(r, 0, "/bin/ls")
-    run_sb(r, "sleep")
+    run_sb(r, "sniper")
     run_elf(r, 0, "server")
     run_sb(r, "sleep")
     run_elf(r, 1, "client")
-    wait()
     run_elf(r, 0, "makens")
     wait()
     r.interactive()
