@@ -40,7 +40,9 @@ def connect_to_remote():
 
 def build_payloads(payloads):
     for p in payloads:
-        os.system(f"gcc --static -Wl,--gc-sections -Os -o {p} payloads/{p}.c && strip -s -R .comment {p}")
+        ret = os.system(f"gcc --static -Wl,--gc-sections -Os -o {p} payloads/{p}.c && strip -s -R .comment {p}")
+        if ret != 0:
+            os.exit(1)
 
 def connect_to_local():
     r  = remote("localhost", 1337)
@@ -66,24 +68,31 @@ def run_elf(r, sandbox, fname):
     r.sendline(f"{sandbox}")
     send_elf(r, fname)
 
+def run_sb(r, fname):
+    r.sendline("1")
+    send_elf(r, fname)
+
 def wait():
     print("Press enter to continue")
     input()
 
 PAYLOADS = [
             "sleep",
+            "server",
+            "client",
            ]
 
 def main():
     build_payloads(PAYLOADS)
     r = connect_to_local()
     r.recvuntil(">")
-    r.sendline("1")
     # send_elf(r, "namespaces")
     # send_elf(r, "busybox")
     # run_elf(r, 0, "/bin/ls")
-    send_elf(r, "sleep")
-    run_elf(r, 0, "sleep")
+    run_sb(r, "sleep")
+    run_elf(r, 0, "server")
+    run_sb(r, "sleep")
+    run_elf(r, 1, "client")
     wait()
     run_elf(r, 0, "attach")
     r.interactive()
