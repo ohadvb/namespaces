@@ -76,13 +76,17 @@ int main(int argc, char * argv[])
             my_err("setns user");
         }
     }
+    if (fork())
+    {
+        sleep(3000);
+    }
     report("sniper");
 
     int ret = -1;
     time_t start = time(NULL);
     while(ret < 0 && (time(NULL) - start) < 15)
     {
-        ret = ptrace(PTRACE_ATTACH, 5, NULL, NULL);
+        ret = ptrace(PTRACE_ATTACH, 3, NULL, NULL);
         if (errno != 3)
             break;
     }

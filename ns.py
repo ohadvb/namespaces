@@ -96,7 +96,7 @@ def main():
     run_sb(r, "sleep")
     run_elf(r, 1, "client")
     run_elf(r, 0, "makens")
-    time.sleep(1)
+    time.sleep(3)
     run_elf(r, 0, "sleep")
     wait()
     r.interactive()
