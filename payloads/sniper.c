@@ -88,14 +88,14 @@ int main(int argc, char * argv[])
     }
     report("sniper");
 
-
-
+    sleep(2);
     int last_pid_file = openat(remote_fd, "proc/sys/kernel/ns_last_pid", O_RDONLY);
     char read_buf[10] = {0};
     ret = read(last_pid_file, read_buf, 10);
     int last_pid = atoi(read_buf);
     close(last_pid_file);
     my_log("last_pid", last_pid);
+    last_pid = 3;
 
     ret = -1;
     int pid = 0;
@@ -115,7 +115,7 @@ int main(int argc, char * argv[])
         last_pid_file = openat(remote_fd, "proc/sys/kernel/ns_last_pid", O_RDONLY);
         int ignore_ret = read(last_pid_file, read_buf, 10);
         int new_last_pid = atoi(read_buf);
-        if (new_last_pid != last_pid)
+        if (new_last_pid > last_pid)
         {
             my_log("last_pid", new_last_pid);
             last_pid = new_last_pid;
