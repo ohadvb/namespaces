@@ -101,9 +101,9 @@ int main(int argc, char * argv[])
         last_pid_file = openat(remote_fd, "proc/sys/kernel/ns_last_pid", O_RDONLY);
         int ignore_ret = read(last_pid_file, read_buf, 10);
         int new_last_pid = atoi(read_buf);
-        my_log("last_pid", new_last_pid);
         if (new_last_pid != last_pid)
         {
+            my_log("last_pid", new_last_pid);
             last_pid = new_last_pid;
         }
         close(last_pid_file);
