@@ -90,13 +90,16 @@ int main(int argc, char * argv[])
     my_log("opened", root_fd);
 
     send_fd(fd, root_fd);
-    sleep(3);
+    sleep(0.5);
 
     ret = mount("proc", "/proc", "proc", 0, NULL);
     my_log("mounted", ret);
-    if (!fork())
+    for (int i = 0; i < 5; i++)
     {
-        sleep(3000);
+        if (!fork())
+        {
+            sleep(3000);
+        }
     }
     
     /* char * mount_point = "tmp/chroots/old_0/proc"; */

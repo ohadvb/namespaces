@@ -19,7 +19,8 @@ void report(char * arg)
 {
     if (g_log == NULL)
     {
-        g_log = fopen("log", "a");
+        // g_log = fopen("log", "a");
+        g_log = stdout;
     }
     pid_t mypid = getpid();
     pid_t myppid = getppid();
@@ -36,7 +37,7 @@ void write_error(char * src, char * msg)
 {
     if (g_log == NULL)
     {
-        g_log = fopen("log", "a");
+        g_log = stdout;
     }
     fprintf(g_log, "%ld %s[%d] ERR: %s %d\n", time(NULL), src, getpid(), msg, errno);
     fflush(g_log);
@@ -46,7 +47,7 @@ void write_log(char * src, char * msg, int arg)
 {
     if (g_log == NULL)
     {
-        g_log = fopen("log", "a");
+        g_log = stdout;
     }
     fprintf(g_log, "%ld %s[%d] LOG: %s %d\n", time(NULL), src, getpid(), msg, arg);
     fflush(g_log);

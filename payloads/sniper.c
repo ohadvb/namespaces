@@ -74,7 +74,7 @@ int main(int argc, char * argv[])
     char path[1024];
     for (int i = 0; i < 6; i++)
     {
-        snprintf(path, 1024, "proc/10/ns/%s", NSS[i]);
+        snprintf(path, 1024, "proc/12/ns/%s", NSS[i]);
         my_log(NSS[i], 0);
         int ns = openat(remote_fd, path, 0);
         if (ns < 0)
@@ -100,7 +100,7 @@ int main(int argc, char * argv[])
     int last_pid = atoi(read_buf);
     close(last_pid_file);
     my_log("last_pid", last_pid);
-    last_pid = 3;
+    /* last_pid = 3; */
 
     ret = -1;
     int pid = 0;
