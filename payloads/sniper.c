@@ -27,6 +27,7 @@ int main(int argc, char * argv[])
 	struct sockaddr_un addr;
 	char buf[100];
 	int fd,rc, cl;
+    int ret;
     report("sniper");
 	if ( (fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
 		my_err("socket error");
@@ -82,9 +83,11 @@ int main(int argc, char * argv[])
     }
     report("sniper");
 
+
+
     int last_pid_file = openat(remote_fd, "proc/sys/kernel/ns_last_pid", O_RDONLY);
     char read_buf[10] = {0};
-    int ret = read(last_pid_file, read_buf, 10);
+    ret = read(last_pid_file, read_buf, 10);
     int last_pid = atoi(read_buf);
     close(last_pid_file);
     my_log("last_pid", last_pid);

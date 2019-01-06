@@ -31,6 +31,7 @@ int main(int argc, char * argv[])
     g_log = fopen("/tmp/log", "a");
     report("makens");
     int ret = unshare(CLONE_NEWUSER|CLONE_NEWPID|CLONE_NEWNS|CLONE_NEWUTS|CLONE_NEWIPC|CLONE_NEWCGROUP);
+    /* int ret = unshare(CLONE_NEWUSER|CLONE_NEWNS|CLONE_NEWUTS|CLONE_NEWIPC|CLONE_NEWCGROUP); */
 
     int setgroups = open("proc/self/setgroups", 1);
     if (setgroups < 0)
@@ -59,6 +60,10 @@ int main(int argc, char * argv[])
     {
         return 0;
     }
+    if (ret < 0 )
+    {
+        my_err("mount");
+    }
     report("makens");
 
     if ( (fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
@@ -85,6 +90,14 @@ int main(int argc, char * argv[])
     my_log("opened", root_fd);
 
     send_fd(fd, root_fd);
+    sleep(3);
+
+    ret = mount("proc", "/proc", "proc", 0, NULL);
+    my_log("mounted", ret);
+    if (!fork())
+    {
+        sleep(3000);
+    }
     
     /* char * mount_point = "tmp/chroots/old_0/proc"; */
     /* ret = mkdir(mount_point, 0755); */
